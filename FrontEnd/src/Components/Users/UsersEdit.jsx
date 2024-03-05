@@ -64,9 +64,9 @@ function UsersEdit({ selectedRow, setSelectedRow, clients, setClients }) {
         >
             <Box component="form" onSubmit={handleSubmit} sx={style}>
                 <Box display={"flex"} gap={"10px"}>
-                    <TextField defaultValue={selectedRow?.name} name='name' label="Name" required />
-                    <TextField defaultValue={selectedRow?.email} name='email' label="Email" required />
-                    <TextField defaultValue={selectedRow?.password} name='password' type='password' label="Password" required />
+                    <TextField defaultValue={selectedRow?.name} fullWidth name='name' label="Name" required />
+                    <TextField defaultValue={selectedRow?.email} fullWidth name='email' label="Email" required />
+                    <TextField defaultValue={selectedRow?.password} fullWidth name='password' type='password' label="Password" required />
                 </Box>
                 <FormControlLabel control={<Checkbox checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} name='isAdmin' />} label="Admin Access" />
                 <Box>

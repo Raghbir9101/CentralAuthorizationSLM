@@ -10,10 +10,21 @@ import ToolsRouter from './Controllers/ToolController.js';
 import ClientsRouter from './Controllers/ClientsController.js';
 import ClientAuthRouter from './Controllers/ClientAuthController.js';
 import GroupsRouter from './Controllers/GroupsController.js';
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 
+const _dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.json({ limit: '50mb' }));
-app.use(express.static('build'));
+app.use(express.static('../FrontEnd/dist'));
 app.use(cors());
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(_dirname,"../FrontEnd" ,"dist", "index.html"));
+})
+
+app.get("/client/*", (req, res) => {
+    res.sendFile(path.join(_dirname,"../FrontEnd" ,"dist", "index.html"));
+})
 
 app.use("/api", AuthRouter);
 app.use("/api", UsersRouter);

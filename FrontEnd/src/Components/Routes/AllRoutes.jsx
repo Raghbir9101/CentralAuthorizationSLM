@@ -13,12 +13,12 @@ function AllRoutes() {
   return (
     <Routes>
       <Route path='/' element={<></>} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<SignUp />} />
+      <Route path='/client/login' element={<Login />} />
+      <Route path='/client/register' element={<SignUp />} />
       {/* <Route path='/addNewTool' element={!token ? <Navigate to={"/login"} /> : <AddNewTool />} /> */}
-      <Route path='/tools' element={!token ? <Navigate to={"/login"} /> : <Tools />} />
-      <Route path='/users' element={!token ? <Navigate to={"/login"} /> : <Users />} />
-      <Route path='/groups' element={!token ? <Navigate to={"/login"} /> : <Groups />} />
+      <Route path='/client/tools' element={!token ? <Navigate to={"/client/login"} /> : <Tools />} />
+      <Route path='/client/users' element={!token ? <Navigate to={"/client/login"} /> : <Users />} />
+      <Route path='/client/groups' element={!token ? <Navigate to={"/client/login"} /> : <Groups />} />
     </Routes>
   )
 }

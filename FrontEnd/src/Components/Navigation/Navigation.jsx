@@ -29,13 +29,13 @@ const navStyles = {
 
 const staticData = [
     {
-        name: "Tools", route: "/tools", icon: <TableChartIcon sx={{ height: "50%" }} />
+        name: "Tools", route: "/client/tools", icon: <TableChartIcon sx={{ height: "50%" }} />
     },
     {
-        name: "Users", route: "/users", icon: <PeopleIcon sx={{ height: "50%" }} />
+        name: "Users", route: "/client/users", icon: <PeopleIcon sx={{ height: "50%" }} />
     },
     {
-        name: "Groups", route: "/groups", icon: <GroupsIcon sx={{ height: "50%" }} />
+        name: "Groups", route: "/client/groups", icon: <GroupsIcon sx={{ height: "50%" }} />
     },
 ]
 
@@ -75,21 +75,21 @@ const Navigation = () => {
                     </NavLink>
                 )
             })}
-            {!token && <NavLink className={"nav"} to={"/login"} style={({ isActive }) => {
+            {!token && <NavLink className={"nav"} to={"/client/login"} style={({ isActive }) => {
                 if (isActive) return navStyles.active;
                 else return navStyles.inActive;
             }}>
                 <LoginIcon sx={{ height: "50%" }} />
                 <Box sx={{ display: navWidth == "200px" ? "flex" : "none" }} className="itemText">Login</Box>
             </NavLink>}
-            {(token && isAdmin) && <NavLink className={"nav"} to={"/logs"} style={({ isActive }) => {
+            {(token && isAdmin) && <NavLink className={"nav"} to={"/client/logs"} style={({ isActive }) => {
                 if (isActive) return navStyles.active;
                 else return navStyles.inActive;
             }}>
                 <LocalActivityIcon sx={{ height: "50%" }} />
                 <Box sx={{ display: navWidth == "200px" ? "flex" : "none" }} className="itemText">Logs</Box>
             </NavLink>}
-            {token && <NavLink onClick={logout} className={"nav"} to={"/login"} style={navStyles.inActive}>
+            {token && <NavLink onClick={logout} className={"nav"} to={"/client/login"} style={navStyles.inActive}>
                 <LogoutIcon sx={{ height: "50%" }} />
                 <Box sx={{ display: navWidth == "200px" ? "flex" : "none" }} className="itemText">Logout</Box>
             </NavLink>}

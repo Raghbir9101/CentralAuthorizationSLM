@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Nunito, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* background-color: black; */
+}
+
+.tablerow {
+  transition: .4s background;
+  cursor: pointer;
+}
+
+.tablerow:hover {
+  background-color: rgb(222, 222, 222);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* .nav:hover {
+  color: white;
+  background: #4B49AC;
+} */
+
+@media screen and (max-width:400px) {
+  .css-h3k8ep {
+    width: 100% !important;
+  }
+}
+
+.navigation:hover {
+  width: 200px;
+}
+
+.itemText {
+  display: none;
+}
+
+.navigation:hover .itemText {
+  display: flex;
+}
+
+.navigation:hover #padding {
+  padding-left: 200px !important;
+}
+
+.reportsTable td {
+  padding: 5px;
+}
+
+.reportsTable th {
+  padding: 5px;
+}
+
+th {
+  font-weight: bold !important;
+}
+
+th svg {
+  fill: rgb(0, 0, 0);
+}
+
+th:hover svg {
+  scale: 1.1;
+}
+
+.MuiDataGrid-panel {
+  top: -140px !important;
+}
+
+.MuiDataGrid-row:nth-child(even) {
+  background-color: rgb(245, 245, 245);
+}
+
+.MuiDataGrid-row:hover {
+  background-color: rgb(225, 225, 225) !important;
+  transition: .3s;
+}
+
+.muiGridHeader {
+  color: rgb(255, 255, 255) !important;
+  background: rgb(43, 43, 43);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.MuiDataGrid-columnHeaders {
+  color: rgb(255, 255, 255) !important;
+  background: rgb(43, 43, 43) !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+.MuiDataGrid-columnHeaders svg {
+  color: rgb(255, 255, 255) !important;
+}

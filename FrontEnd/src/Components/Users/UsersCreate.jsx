@@ -60,7 +60,7 @@ function UsersCreate({ isOpen, setIsOpen, clients, setClients }) {
             <Box component="form" onSubmit={handleSubmit} sx={style}>
                 <Box display={"flex"} gap={"10px"}>
                     <TextField name='name' label="Name" required fullWidth />
-                    <TextField name='email' label="Email" required fullWidth />
+                    <TextField name='email' type='email' label="Email" required fullWidth />
                     <TextField name='password' label="Password" type="Password" required fullWidth />
                 </Box>
                 <FormControlLabel control={<Checkbox checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} name='isAdmin' />} label="Admin Access" />

@@ -100,10 +100,8 @@ function authenticateToken(req, res, next) {
 
     jwt.verify(token, secret, async (err, decoded) => {
         if (err) return res.sendStatus(403);
-        const user = await ClientsModel.findById(decoded.userId);
+        const user = await ClientsModel.findById(decoded.userId).lean();
         if (!user) return res.sendStatus(404);
-
-        console.log(user)
         let authGroups = user.access.map(item => item.groupID);
         const allGroups = await GroupsModel.find(mongooseOrObj("_id", authGroups))
 

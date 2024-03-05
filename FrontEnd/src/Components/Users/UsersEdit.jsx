@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Checkbox, FormControlLabel, Modal, TextField, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react'
 import axios from "../../HTTP.js"
 import { Context } from '../Context/Context.jsx';
@@ -23,8 +23,9 @@ const style = {
 
 function UsersEdit({ selectedRow, setSelectedRow, clients, setClients }) {
     const { tools, setTools, ActivateToast } = useContext(Context);
+    const [isAdmin, setIsAdmin] = useState(selectedRow.isAdmin || false)
     const [toolsAccess, setToolsAccess] = useState(selectedRow.access || [
-        { _id: uuid(), startDate: new Date().toISOString(), endDate: new Date().toISOString(), groupName: "", groupID: ""  }
+        { _id: uuid(), startDate: new Date().toISOString(), endDate: new Date().toISOString(), groupName: "", groupID: "" }
     ])
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,15 +35,16 @@ function UsersEdit({ selectedRow, setSelectedRow, clients, setClients }) {
                 name: formData.get("name"),
                 email: formData.get("email"),
                 password: formData.get("password"),
-                access: toolsAccess
+                access: toolsAccess,
+                isAdmin
             }
             let { data } = await axios.put(`clients/${selectedRow._id}`, postData);
             setClients(prev => {
                 let temp = [...prev];
-                for(let i =0; i < temp.length; i++) {
-                    if(temp[i]._id == selectedRow._id) {
+                for (let i = 0; i < temp.length; i++) {
+                    if (temp[i]._id == selectedRow._id) {
                         temp[i] = {
-                            ...temp[i],...postData
+                            ...temp[i], ...postData
                         }
                     }
                 }
@@ -55,31 +57,33 @@ function UsersEdit({ selectedRow, setSelectedRow, clients, setClients }) {
     }
     return (
         <Modal
-        open={!!selectedRow}
-        onClose={() => setSelectedRow(null)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-    >
-        <Box component="form" onSubmit={handleSubmit} sx={style}>
-            <TextField defaultValue={selectedRow?.name} name='name' label="Name" required />
-            <TextField defaultValue={selectedRow?.email} name='email' label="Email" required />
-            <TextField defaultValue={selectedRow?.password} name='password' type='password' label="Password" required />
-            {/* <Typography sx={{ fontSize: "20px", textAlign: "center" }}>Tools Access</Typography> */}
-            <Box>
-                <Button onClick={() => {
-                    setToolsAccess(prev => {
-                        return [...prev, { _id: uuid(), startDate: new Date().toISOString(), endDate: new Date().toISOString(), groupName: "", groupID: ""  }]
-                    })
-                }} variant='contained'>Add</Button>
+            open={!!selectedRow}
+            onClose={() => setSelectedRow(null)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box component="form" onSubmit={handleSubmit} sx={style}>
+                <Box display={"flex"} gap={"10px"}>
+                    <TextField defaultValue={selectedRow?.name} name='name' label="Name" required />
+                    <TextField defaultValue={selectedRow?.email} name='email' label="Email" required />
+                    <TextField defaultValue={selectedRow?.password} name='password' type='password' label="Password" required />
+                </Box>
+                <FormControlLabel control={<Checkbox checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} name='isAdmin' />} label="Admin Access" />
+                <Box>
+                    <Button onClick={() => {
+                        setToolsAccess(prev => {
+                            return [...prev, { _id: uuid(), startDate: new Date().toISOString(), endDate: new Date().toISOString(), groupName: "", groupID: "" }]
+                        })
+                    }} variant='contained'>Add</Button>
+                </Box>
+                {
+                    toolsAccess.map((item, index) => (
+                        <AccessTable index={index} _id={item._id} setToolsAccess={setToolsAccess} tools={tools} toolsAccess={toolsAccess} />
+                    ))
+                }
+                <Button type='submit' sx={{ bgcolor: "#454545", color: "#d6d6d6", "&:hover": { bgcolor: "#454545", color: "white" } }} variant='contained'>Submit</Button>
             </Box>
-            {
-                toolsAccess.map((item, index) => (
-                    <AccessTable index={index} _id={item._id} setToolsAccess={setToolsAccess} tools={tools} toolsAccess={toolsAccess} />
-                ))
-            }
-            <Button type='submit' sx={{ bgcolor: "#454545", color: "#d6d6d6", "&:hover": { bgcolor: "#454545", color: "white" } }} variant='contained'>Submit</Button>
-        </Box>
-    </Modal >
+        </Modal >
     )
 }
 export default UsersEdit

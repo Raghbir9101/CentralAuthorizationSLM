@@ -23,6 +23,7 @@ const style = {
 
 function UsersCreate({ isOpen, setIsOpen, clients, setClients }) {
     const { tools, setTools, ActivateToast } = useContext(Context);
+    const [isAdmin, setIsAdmin] = useState(false)
     const [toolsAccess, setToolsAccess] = useState([
         { _id: uuid(), startDate: new Date().toISOString(), endDate: new Date().toISOString(), groupName: "", groupID: "" }
     ])
@@ -34,8 +35,10 @@ function UsersCreate({ isOpen, setIsOpen, clients, setClients }) {
                 name: formData.get("name"),
                 email: formData.get("email"),
                 password: formData.get("password"),
-                access: toolsAccess
+                access: toolsAccess,
+                isAdmin,
             }
+            console.log(postData)
             let { data } = await axios.post(`createUniqueClients`, postData);
             setClients(prev => [...prev, data])
             setIsOpen(false)
@@ -55,10 +58,12 @@ function UsersCreate({ isOpen, setIsOpen, clients, setClients }) {
             aria-describedby="modal-modal-description"
         >
             <Box component="form" onSubmit={handleSubmit} sx={style}>
-                <TextField name='name' label="Name" required />
-                <TextField name='email' label="Email" required />
-                <TextField name='password' label="Password" type="Password" required />
-                <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+                <Box display={"flex"} gap={"10px"}>
+                    <TextField name='name' label="Name" required fullWidth />
+                    <TextField name='email' label="Email" required fullWidth />
+                    <TextField name='password' label="Password" type="Password" required fullWidth />
+                </Box>
+                <FormControlLabel control={<Checkbox checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} name='isAdmin' />} label="Admin Access" />
                 <Box>
                     <Button onClick={() => {
                         setToolsAccess(prev => {

@@ -26,6 +26,7 @@ class ClientAuthorization {
         const allGroups = await GroupsModel.find(mongooseOrObj("_id", authGroups))
 
         let finalExpiry = new Date();
+        finalExpiry.setDate(finalExpiry.getDate() - 10000)
         let isToolAuthorized = false;
 
         for (let i = 0; i < user.access.length; i++) {
@@ -39,17 +40,25 @@ class ClientAuthorization {
                 }
             }
         }
-        if (!isToolAuthorized) return res.json({ error: "User does not have access to this tool." });
-
-        let expiry = hasExpired(finalExpiry)
-        if (expiry) return res.json({ error: "Access Expired for this tool." });
-
-        const token = jwt.sign({ userId: user._id, toolID: authToolName }, secret);
         delete user.password;
         delete user.access;
+        let expiry = hasExpired(finalExpiry);
+        if (!isToolAuthorized || expiry) {
+            const token = jwt.sign({ userId: user._id, toolID: authToolName }, secret);
+            return res.json({
+                body: user,
+                token,
+                accessStatus: "BASIC",
+                accessError: "User does not have access to this tool or Access Expired for this tool."
+            })
+        }
+
+        const token = jwt.sign({ userId: user._id, toolID: authToolName }, secret);
+
         return res.json({
             body: user,
-            token
+            token,
+            accessStatus: "PRO",
         });
     }
     static async register(req, res) {
@@ -93,7 +102,7 @@ function hasExpired(endDate) {
 }
 
 
-function authenticateToken(req, res, next) {
+export function authenticateToken(req, res, next) {
     const authHeader = req?.headers?.authorization;
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) return res?.sendStatus(401);

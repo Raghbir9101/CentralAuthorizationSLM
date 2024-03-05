@@ -10,7 +10,6 @@ let CRUDinstance = new CRUD(ClientsModel)
 ClientsRouter.post("/createUniqueClients", async (req, res) => {
     try {
         const prevData = await ClientsModel.findOne({ email: req.body.email });
-        console.log(prevData)
         if(!!prevData !=false ) throw new Error("User with same email ID already exists.")
         const newData = await CRUDinstance.create(req.body);
         res.status(201).json(newData);
@@ -18,6 +17,5 @@ ClientsRouter.post("/createUniqueClients", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 export default ClientsRouter;

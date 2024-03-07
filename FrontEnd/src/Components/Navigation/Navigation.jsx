@@ -85,13 +85,13 @@ const Navigation = () => {
                 <LoginIcon sx={{ height: "50%" }} />
                 <Box sx={{ display: navWidth == "200px" ? "flex" : "none" }} className="itemText">Login</Box>
             </NavLink>}
-            {(token && isAdmin) && <NavLink className={"nav"} to={"/client/logs"} style={({ isActive }) => {
+            {/* {(token && isAdmin) && <NavLink className={"nav"} to={"/client/logs"} style={({ isActive }) => {
                 if (isActive) return navStyles.active;
                 else return navStyles.inActive;
             }}>
                 <LocalActivityIcon sx={{ height: "50%" }} />
                 <Box sx={{ display: navWidth == "200px" ? "flex" : "none" }} className="itemText">Logs</Box>
-            </NavLink>}
+            </NavLink>} */}
             {token && <NavLink onClick={logout} className={"nav"} to={"/client/login"} style={navStyles.inActive}>
                 <LogoutIcon sx={{ height: "50%" }} />
                 <Box sx={{ display: navWidth == "200px" ? "flex" : "none" }} className="itemText">Logout</Box>

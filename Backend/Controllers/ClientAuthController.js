@@ -20,11 +20,17 @@ class ClientAuthorization {
         if (!user) {
             return res.json({ error: 'User Not Found' });
         }
+
         if (user.password != password && !isGoogleLogin) {
             return res.json({ error: 'Password is Incorrect' });
         }
 
         let authGroups = user.access.map(item => item.groupID);
+
+        if(authGroups.length == 0) {
+            return res.send({error: "This user does not have access to any tool."})
+        }
+
         const allGroups = await GroupsModel.find(mongooseOrObj("_id", authGroups))
 
         let finalExpiry = new Date();

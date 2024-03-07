@@ -10,6 +10,8 @@ class ClientAuthorization {
     static async login(req, res) {
         const { email, password } = req.body;
         let authToolName = req.query.tool || "";
+        let isGoogleLogin = req.body.isGoogleLogin || false;
+        delete req.body.isGoogleLogin;
         if (!authToolName) {
             return res.json({ error: 'Invalid Tool' });
         }
@@ -18,7 +20,7 @@ class ClientAuthorization {
         if (!user) {
             return res.json({ error: 'User Not Found' });
         }
-        if (user.password != password) {
+        if (user.password != password && !isGoogleLogin) {
             return res.json({ error: 'Password is Incorrect' });
         }
 

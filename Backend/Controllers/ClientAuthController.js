@@ -36,7 +36,7 @@ class ClientAuthorization {
         let finalExpiry = new Date();
         finalExpiry.setDate(finalExpiry.getDate() - 10000)
         let isToolAuthorized = false;
-        let licenceType = "BASIC";
+        let licenseType = "BASIC";
         for (let i = 0; i < user.access.length; i++) {
             let tempGroup = allGroups.find(item => item._id == authGroups[i]);
             let tempDate = new Date(user.access[i].endDate);
@@ -44,8 +44,9 @@ class ClientAuthorization {
             for(let toolRow of tempGroup.tools) {
                 if(toolRow.toolID == authToolName) {
                     isToolAuthorized = true;
-                    if(toolRow.licenceType == "PRO") {
-                        licenceType = "PRO";
+                    if(toolRow.licenseType == "PRO") {
+                        console.log(licenseType)
+                        licenseType = "PRO";
                     }
                     if ((tempDate > finalExpiry)) {
                         finalExpiry = tempDate;
@@ -74,7 +75,7 @@ class ClientAuthorization {
         return res.json({
             body: user,
             token,
-            accessStatus: licenceType || "BASIC",
+            accessStatus: licenseType || "BASIC",
         });
     }
     static async register(req, res) {
@@ -122,7 +123,7 @@ export function authenticateToken(req, res, next) {
     const authHeader = req?.headers?.authorization;
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) return res?.sendStatus(401);
-    let licenceType = "BASIC";
+    let licenseType = "BASIC";
     jwt.verify(token, secret, async (err, decoded) => {
         if (err) return res.sendStatus(403);
         const user = await ClientsModel.findById(decoded.userId).lean();
@@ -138,10 +139,10 @@ export function authenticateToken(req, res, next) {
             let tempDate = new Date(user.access[i].endDate);
             // let set = new Set(tempGroup.tools.map(item => item.toolID))
             for(let toolRow of tempGroup.tools) {
-                if(toolRow.toolID == authToolName) {
+                if(toolRow.toolID == decoded.toolID) {
                     isToolAuthorized = true;
-                    if(toolRow.licenceType == "PRO") {
-                        licenceType = "PRO";
+                    if(toolRow.licenseType == "PRO") {
+                        licenseType = "PRO";
                     }
                     if ((tempDate > finalExpiry)) {
                         finalExpiry = tempDate;
@@ -154,7 +155,7 @@ export function authenticateToken(req, res, next) {
         let expiry = hasExpired(finalExpiry)
         if (expiry) return res.json({ error: "Access Expired for this tool." });
 
-        req.user = {...user, licenceType};
+        req.user = {...user, licenseType};
         next();
     });
 }

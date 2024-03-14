@@ -13,11 +13,11 @@ function AllRoutes() {
   const { token } = useContext(Context)
   return (
     <Routes>
-      <Route path='/' element={<></>} />
+      <Route path='/' element={!token ? <Navigate to={"/client/login"} /> : <Dashboard />} />
       <Route path='/client/login' element={<Login />} />
       <Route path='/client/register' element={<SignUp />} />
       {/* <Route path='/addNewTool' element={!token ? <Navigate to={"/login"} /> : <AddNewTool />} /> */}
-      <Route path='/client/dashboard' element={!token ? <Navigate to={"/client/login"} /> : <Dashboard />} />
+      {/* <Route path='/client/dashboard' element={!token ? <Navigate to={"/client/login"} /> : <Dashboard />} /> */}
       <Route path='/client/tools' element={!token ? <Navigate to={"/client/login"} /> : <Tools />} />
       <Route path='/client/users' element={!token ? <Navigate to={"/client/login"} /> : <Users />} />
       <Route path='/client/groups' element={!token ? <Navigate to={"/client/login"} /> : <Groups />} />

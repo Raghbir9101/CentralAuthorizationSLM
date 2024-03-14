@@ -12,19 +12,42 @@ import ClientAuthRouter from './Controllers/ClientAuthController.js';
 import GroupsRouter from './Controllers/GroupsController.js';
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-
+import ToolsModel from './Models/ToolsModel.js';
+import UsersModel from './Models/UsersModel.js';
+import GroupsModel from './Models/GroupsModel.js';
+import ClientsModel from './Models/ClientsModel.js';
+import { authenticateToken } from "./Authorization/AuthenticateToken.js"
 const _dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static('../FrontEnd/dist'));
 app.use(cors());
 
+app.get("/api/dashboard", authenticateToken, async (req, res) => {
+    // try {
+    const dashboardData = {
+        userName: req.user?.fullName || "",
+        toolsCount: await ToolsModel.countDocuments(),
+        employeesCount: await UsersModel.countDocuments(),
+        groupsCount: await GroupsModel.countDocuments(),
+        clientsCount: await ClientsModel.countDocuments()
+    }
+    console.log(dashboardData)
+    res.send(dashboardData)
+    // } catch (error) {
+    //     console.log(JSON.stringify(error, null, 5))
+    //     res.json({ error })
+    // }
+})
+
 app.get("/", (req, res) => {
-    res.sendFile(path.join(_dirname,"../FrontEnd" ,"dist", "index.html"));
+    res.sendFile(path.join(_dirname, "../FrontEnd", "dist", "index.html"));
 })
 
 app.get("/client/*", (req, res) => {
-    res.sendFile(path.join(_dirname,"../FrontEnd" ,"dist", "index.html"));
+    res.sendFile(path.join(_dirname, "../FrontEnd", "dist", "index.html"));
 })
+
+
 
 app.use("/api", AuthRouter);
 app.use("/api", UsersRouter);

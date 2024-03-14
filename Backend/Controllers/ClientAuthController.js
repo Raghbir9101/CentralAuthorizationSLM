@@ -36,17 +36,25 @@ class ClientAuthorization {
         let finalExpiry = new Date();
         finalExpiry.setDate(finalExpiry.getDate() - 10000)
         let isToolAuthorized = false;
-
+        let licenceType = "BASIC";
         for (let i = 0; i < user.access.length; i++) {
             let tempGroup = allGroups.find(item => item._id == authGroups[i]);
             let tempDate = new Date(user.access[i].endDate);
-            let set = new Set(tempGroup.tools.map(item => item.toolID))
-            if (set.has(authToolName)) {
-                isToolAuthorized = true;
-                if ((tempDate > finalExpiry)) {
-                    finalExpiry = tempDate;
+            // let set = new Set(tempGroup.tools.map(item => item.toolID))
+            for(let toolRow of tempGroup.tools) {
+                if(toolRow.toolID == authToolName) {
+                    isToolAuthorized = true;
+                    if(toolRow.licenceType == "PRO") {
+                        licenceType = "PRO";
+                    }
+                    if ((tempDate > finalExpiry)) {
+                        finalExpiry = tempDate;
+                    }
                 }
             }
+            // if (set.has(authToolName)) {
+                
+            // }
         }
         delete user.password;
         delete user.access;
@@ -66,7 +74,7 @@ class ClientAuthorization {
         return res.json({
             body: user,
             token,
-            accessStatus: "PRO",
+            accessStatus: licenceType || "BASIC",
         });
     }
     static async register(req, res) {
@@ -114,7 +122,7 @@ export function authenticateToken(req, res, next) {
     const authHeader = req?.headers?.authorization;
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) return res?.sendStatus(401);
-
+    let licenceType = "BASIC";
     jwt.verify(token, secret, async (err, decoded) => {
         if (err) return res.sendStatus(403);
         const user = await ClientsModel.findById(decoded.userId).lean();
@@ -124,15 +132,20 @@ export function authenticateToken(req, res, next) {
 
         let finalExpiry = new Date();
         let isToolAuthorized = false;
-
+        
         for (let i = 0; i < user.access.length; i++) {
             let tempGroup = allGroups.find(item => item._id == authGroups[i]);
             let tempDate = new Date(user.access[i].endDate);
-            let set = new Set(tempGroup.tools.map(item => item.toolID))
-            if (set.has(decoded.toolID)) {
-                isToolAuthorized = true;
-                if ((tempDate > finalExpiry)) {
-                    finalExpiry = tempDate;
+            // let set = new Set(tempGroup.tools.map(item => item.toolID))
+            for(let toolRow of tempGroup.tools) {
+                if(toolRow.toolID == authToolName) {
+                    isToolAuthorized = true;
+                    if(toolRow.licenceType == "PRO") {
+                        licenceType = "PRO";
+                    }
+                    if ((tempDate > finalExpiry)) {
+                        finalExpiry = tempDate;
+                    }
                 }
             }
         }
@@ -141,7 +154,7 @@ export function authenticateToken(req, res, next) {
         let expiry = hasExpired(finalExpiry)
         if (expiry) return res.json({ error: "Access Expired for this tool." });
 
-        req.user = user;
+        req.user = {...user, licenceType};
         next();
     });
 }

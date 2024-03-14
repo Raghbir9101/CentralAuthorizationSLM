@@ -29,7 +29,7 @@ const navStyles = {
 
 const staticData = [
     {
-        name: "Dashboard", route: "/client/dashboard", icon: <TableChartIcon sx={{ height: "50%" }} />
+        name: "Dashboard", route: "/", icon: <TableChartIcon sx={{ height: "50%" }} />
     },
     {
         name: "Tools", route: "/client/tools", icon: <TableChartIcon sx={{ height: "50%" }} />

@@ -24,7 +24,7 @@ const style = {
 function UsersEdit({ selectedRow, setSelectedRow, groups, setGroups }) {
     const { tools, setTools, ActivateToast } = useContext(Context);
     const [toolsAccess, setToolsAccess] = useState(selectedRow.tools || [
-        { _id: uuid(), toolName: "", toolID: "" }
+        { _id: uuid(), toolName: "", toolID: "", licenseType: "BASIC" }
     ])
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,10 +38,10 @@ function UsersEdit({ selectedRow, setSelectedRow, groups, setGroups }) {
             let { data } = await axios.put(`groups/${selectedRow._id}`, postData);
             setGroups(prev => {
                 let temp = [...prev];
-                for(let i =0; i < temp.length; i++) {
-                    if(temp[i]._id == selectedRow._id) {
+                for (let i = 0; i < temp.length; i++) {
+                    if (temp[i]._id == selectedRow._id) {
                         temp[i] = {
-                            ...temp[i],...postData
+                            ...temp[i], ...postData
                         }
                     }
                 }
@@ -62,13 +62,13 @@ function UsersEdit({ selectedRow, setSelectedRow, groups, setGroups }) {
             <Box component="form" onSubmit={handleSubmit} sx={style}>
                 <Box display={"flex"} gap={"20px"}>
                     <TextField defaultValue={selectedRow?.groupName} name='groupName' label="Group Name" fullWidth required />
-                    <FormControl  sx={{ width: "100%", mb: "10px" }}>
+                    <FormControl sx={{ width: "100%", mb: "10px" }}>
                         <InputLabel>Validity</InputLabel>
                         <Select
                             sx={{ width: "100%" }}
                             label={"Validity"}
                             name="validity"
-                            defaultValue={selectedRow?.validity} 
+                            defaultValue={selectedRow?.validity}
                         >
                             <MenuItem value={"0.083"}>1 Months</MenuItem>
                             <MenuItem value={"0.5"}>6 Months</MenuItem>
@@ -86,7 +86,7 @@ function UsersEdit({ selectedRow, setSelectedRow, groups, setGroups }) {
                 <Box>
                     <Button onClick={() => {
                         setToolsAccess(prev => {
-                            return [...prev, { _id: uuid(), toolName: "", toolID: "" }]
+                            return [...prev, { _id: uuid(), toolName: "", toolID: "", licenseType: "BASIC" }]
                         })
                     }} variant='contained'>Add</Button>
                 </Box>
@@ -112,10 +112,8 @@ function AccessTable({ tools, toolsAccess, setToolsAccess, index, _id }) {
         setToolsAccess(temp)
     };
 
-    const handleDateChange = (e) => {
+    const handleLicenseTypeChange = (e) => {
         let { value, name } = e.target;
-        value = new Date(value).toISOString()
-        console.log(value, name)
         let temp = [...toolsAccess];
         temp[index][name] = value;
         setToolsAccess(temp)
@@ -154,8 +152,13 @@ function AccessTable({ tools, toolsAccess, setToolsAccess, index, _id }) {
                 />
             )}
         />
-        {/* <TextField sx={{ flex: 1 }} name='startDate' onChange={handleDateChange} size='small' value={convertISOToInputDate(toolsAccess[index].startDate)} label="Start Date" type='date' InputLabelProps={{ shrink: true }} />
-        <TextField sx={{ flex: 1 }} name='endDate' onChange={handleDateChange} size='small' value={convertISOToInputDate(toolsAccess[index].endDate)} label="End Date" type='date' InputLabelProps={{ shrink: true }} /> */}
+        <FormControl  size='small' sx={{ width: "30%" }}>
+            <InputLabel>License Type</InputLabel>
+            <Select size='small' label={"License Type"} name='licenseType' value={toolsAccess[index]?.licenseType} onChange={handleLicenseTypeChange}>
+                <MenuItem value={"BASIC"}>BASIC</MenuItem>
+                <MenuItem value={"PRO"}>PRO</MenuItem>
+            </Select>
+        </FormControl>
         <Button onClick={handleRemoveAccessRow} variant='contained' sx={{ color: "white", bgcolor: "red", "&:hover": { color: "white", bgcolor: "red" } }} ><DeleteOutlineIcon /></Button>
     </Box>
 }

@@ -16,4 +16,4 @@ let authenticateToken = (req, res, next) => {
     });
 }
 
-export { authenticateToken, authenticateTokenToolList }
+export { authenticateToken }
